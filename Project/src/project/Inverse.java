@@ -17,8 +17,8 @@ public class Inverse extends Matrix{
     
     /**
      * Constructor with size of matrix.
-     * @param m
-     * @param n
+     * @param m  number of rows in Matrix
+     * @param n  number of cols in Matrix
      */
     public Inverse(int m, int n) 
     { 
@@ -27,11 +27,11 @@ public class Inverse extends Matrix{
     
     /**
      * Inverse method, which uses L and U matrices.
-     * @param L
-     * @param U
-     * @param P
-     * @param n
-     * @return
+     * @param L  Matrix from LU factorization.
+     * @param U  Matrix from LU factorization.
+     * @param P  Matrix from pivoting.
+     * @param n  size of cols/rows in Matrix
+     * @return Matrix (inverse)
      */
     public Matrix inverseMatrix(Matrix L, Matrix U, Matrix P, int n)
     {

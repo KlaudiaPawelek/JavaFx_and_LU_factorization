@@ -32,8 +32,8 @@ public class Matrix implements Storage{
 
     /**
      * Constructor, which can create matrix of size m x n.
-     * @param m
-     * @param n
+     * @param m number of rows in Matrix
+     * @param n number of cols in Matrix
      */
         public Matrix(int m, int n)
     {
@@ -46,7 +46,7 @@ public class Matrix implements Storage{
 
     /**
      * Copy constructor
-     * @param A
+     * @param A  Matrix
      */
         public Matrix(Matrix A)
     {
@@ -94,7 +94,7 @@ public class Matrix implements Storage{
     
     /**
      * Copy array (matrix).
-     * @param A
+     * @param A  Matrix
      * @return double[][]
      */
     public double [][] copy(Matrix A)
@@ -109,9 +109,9 @@ public class Matrix implements Storage{
    
     /**
      * Copy vector to matrix.
-     * @param arrayList
-     * @param m
-     * @param n
+     * @param arrayList  vector as Array List
+     * @param m  number of rows in Matrix
+     * @param n  number of cols in Matrix
      * @return Matrix
      */
     public Matrix copy(ArrayList<Double> arrayList, int m, int n)
@@ -130,8 +130,8 @@ public class Matrix implements Storage{
    
     /**
      * Multiplication of two matrices.
-     * @param A
-     * @param B
+     * @param A  left Matrix
+     * @param B  right Matrix
      * @return Matrix
      */
     public Matrix multiplication(Matrix A, Matrix B)

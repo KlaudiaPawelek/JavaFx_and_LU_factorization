@@ -29,7 +29,7 @@ public class Project extends Application {
     /**
      * Method responsible for displaying Stage with all elements like buttons or text areas.
      * All methods are called in this place using handlers.
-     * @param primaryStage
+     * @param primaryStage main Stage of window.
      */
     @Override
     public void start(Stage primaryStage) {

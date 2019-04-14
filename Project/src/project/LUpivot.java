@@ -8,8 +8,8 @@ public class LUpivot extends Matrix {
 
     /**
      * Default constructor.
-     * @param m
-     * @param n
+     * @param m  int, number of rows.
+     * @param n  int, number of cols.
      */
     public LUpivot(int m, int n) 
     {
@@ -19,11 +19,11 @@ public class LUpivot extends Matrix {
     /**
      * Lu factorization method, which includes decomposition. 
      * Create L and U matrices.
-     * @param A
-     * @param L
-     * @param U
-     * @param n
-     * @param errorLabel
+     * @param A  input Matrix read from text area or from previous method.
+     * @param L  Matrix for LU factorization
+     * @param U  Matrix for LU factorization
+     * @param n  number of rows/cols in Matrix
+     * @param errorLabel - Label in GUI prepared for displaying errors.
      */
     public void Lu_factorization(Matrix A, Matrix L, Matrix U, int n, Label errorLabel)
     {
@@ -63,11 +63,11 @@ public class LUpivot extends Matrix {
     
     /**
      * LU solving method, which includes forward and back substitution.
-     * @param L
-     * @param U
-     * @param b
-     * @param n
-     * @param x
+     * @param L  Matrix for LU factorization
+     * @param U  Matrix for LU factorization
+     * @param b  Vector read from text area or from previous method.
+     * @param n  number of rows/cols in Matrix
+     * @param x  Vector for final result.
      */
     public void Lu_solving(Matrix L, Matrix U, Vector b, int n, Vector x)
     {
@@ -99,10 +99,10 @@ public class LUpivot extends Matrix {
     
     /**
      * Reorder method with pivoting and elimination.
-     * @param A
-     * @param n
-     * @param P
-     * @param errorLabel
+     * @param A  Matrix read from text area or from previous method.
+     * @param n  number of rows/cols in Matrix.
+     * @param P  Matrix for pivoting
+     * @param errorLabel - Label in GUI prepared for displaying errors.
      */
     public void reorder(Matrix A, int n, Matrix P, Label errorLabel)
     {
@@ -179,10 +179,10 @@ public class LUpivot extends Matrix {
     
     /**
      * Method responsible for computing determinant.
-     * @param L
-     * @param U
-     * @param P
-     * @return
+     * @param L  Matrix from LU factorization
+     * @param U  Matrix from LU factorization
+     * @param P  Matrix from pivoting.
+     * @return double determinant
      */
     public double determinant(Matrix L, Matrix U, Matrix P)
     {

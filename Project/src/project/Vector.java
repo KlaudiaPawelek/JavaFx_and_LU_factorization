@@ -32,7 +32,7 @@ public class Vector implements Storage{
     
     /**
      * Constructor with size of vector.
-     * @param size
+     * @param size size of matrix
      */
     public Vector(int size)
     {
@@ -44,7 +44,7 @@ public class Vector implements Storage{
 
     /**
      * Copy constructor - Vector as argument.
-     * @param A
+     * @param A Vector
      */
         public Vector(Vector A)
     {
@@ -57,7 +57,7 @@ public class Vector implements Storage{
     
     /**
      * Copy constructor - array as argument.
-     * @param array
+     * @param array vector as double[] array
      */
     public Vector(double[] array)
     {
@@ -79,8 +79,8 @@ public class Vector implements Storage{
     
     /**
      * Vector-matrix multiplication
-     * @param A
-     * @param b
+     * @param A Matrix
+     * @param b Vector
      * @return Vector
      */
     public Vector multiplication(Matrix A, Vector b)

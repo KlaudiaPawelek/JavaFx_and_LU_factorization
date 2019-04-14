@@ -30,10 +30,10 @@ public class BasicActions extends Project{
 
     /**
      * Clear all text areas and errorLable.
-     * @param matrixTextArea
-     * @param vectorTextArea
-     * @param resultTextArea
-     * @param errorLabel
+     * @param matrixTextArea  text area for inserting matrix.
+     * @param vectorTextArea  text area for inserting vector.
+     * @param resultTextArea  text area prepared for displaying results of LU factorization and inversion. 
+     * @param errorLabel  label for displaying errors in GUI
      */
         public void Clear(TextArea matrixTextArea, TextArea vectorTextArea, TextArea resultTextArea, Label errorLabel)
     {
@@ -49,12 +49,12 @@ public class BasicActions extends Project{
      * @param matrixTextArea
      * @param vectorTextArea
      * @param resultTextArea
-     * @param A
-     * @param b
-     * @param L
-     * @param U
-     * @param x
-     * @param det
+     * @param A  matrix read from text area, original matrix.
+     * @param b  matrix read from text area, original vector.
+     * @param L  matrix from LU factorization
+     * @param U  matrix from LU factorization
+     * @param x  computed Vector
+     * @param det  double, determinant
      */
         public void DisplayLUResults(TextArea matrixTextArea, TextArea vectorTextArea, TextArea resultTextArea, Matrix A, Vector b, Matrix L, Matrix U, Vector x, double det)
     {
@@ -90,11 +90,11 @@ public class BasicActions extends Project{
      * @param matrixTextArea
      * @param vectorTextArea
      * @param resultTextArea
-     * @param A
-     * @param L
-     * @param U
-     * @param Inv
-     * @param det
+     * @param A matrix read from text area, original matrix.
+     * @param L matrix from LU factorization
+     * @param U matrix from LU factorization
+     * @param Inv inverse Matrix
+     * @param det double, determinant.
      */
     public void DisplayInvResults(TextArea matrixTextArea, TextArea vectorTextArea, TextArea resultTextArea, Matrix A, Matrix L, Matrix U, Matrix Inv, double det)
     {
@@ -126,9 +126,10 @@ public class BasicActions extends Project{
 
     /**
      * Allow the user to load a previously saved computation.
-     * @param file
-     * @param resultTextArea
-     * @param errorLabel
+     * @param file file with saved results
+     * @param resultTextArea  text area for displaying results
+     * @param errorLabel label for displaying errors in GUI.
+     * @deprecated Format of text in files is not proper after load to text area.
      */
         public void Load(File file, TextArea resultTextArea, Label errorLabel)
     {
@@ -156,7 +157,7 @@ public class BasicActions extends Project{
     
     /**
      * File restricion for uploading, only txt files.
-     * @param fileChooser
+     * @param fileChooser important for file restriction
      */
     public void FileRestrictions(FileChooser fileChooser)
     {
@@ -168,9 +169,10 @@ public class BasicActions extends Project{
 
     /**
      *  Save results from Result Text Area to text file.
-     * @param resultTextArea
-     * @param file
-     * @param errorLabel
+     * @param resultTextArea  text area for displaying results
+     * @param file file for saving results as txt
+     * @param errorLabel  label for displaying errors on GUI
+     * @deprecated Format of text in file is not proper after save.
      */
         public void Save(TextArea resultTextArea, File file, Label errorLabel)
     {        
