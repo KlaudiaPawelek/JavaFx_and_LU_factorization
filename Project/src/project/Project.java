@@ -2,7 +2,6 @@ package project;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
@@ -21,31 +19,29 @@ import java.util.ArrayList;
 import java.io.File;
 
 /**
- *
+ * This class is responsible for Graphical User Interface.
  * @author Klaudia Pawelek
  */
 public class Project extends Application {
     
-    //Usefull page about layout!
-    //https://o7planning.org/en/10625/javafx-hbox-vbox-layout-tutorial
-    //https://o7planning.org/en/10857/javafx-scrollpane-tutorial
-    ScrollBar xscrollBar;
-    ScrollBar yscrollBar;
-    double xscrollValue=100;
-    double yscrollValue=50;
-    int xBarWidth = 393;
-    int xBarHeight = 15;
-    int yBarWidth = 15;
-    int yBarHeight = 393;
+    Storage S;
     
-    
+    /**
+     * Method responsible for displaying Stage with all elements like buttons or text areas.
+     * All methods are called in this place using handlers.
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         
-    
+        double xscrollValue=100;
+        double yscrollValue=50;
         TextArea matrixTextArea = new TextArea();
+        matrixTextArea.setPromptText("Please, put space between numbers.");
         TextArea vectorTextArea = new TextArea();
-        TextArea resultTextArea = new TextArea("Result shall be visible here!");
+        vectorTextArea.setPromptText("Please, put space between numbers.");
+        TextArea resultTextArea = new TextArea();
+        resultTextArea.setPromptText("Result shall be visible here...");
         matrixTextArea.setScrollTop(xscrollValue);
         matrixTextArea.setScrollLeft(yscrollValue);
         vectorTextArea.setScrollTop(xscrollValue);
@@ -54,6 +50,7 @@ public class Project extends Application {
         resultTextArea.setScrollLeft(yscrollValue);
         
         Label errorLabel = new Label(" ");
+        errorLabel.setStyle("-fx-text-fill: white;");
         errorLabel.setPadding(new Insets(0, xscrollValue, 5, 5));
         
         Button btnLU = new Button();
@@ -81,15 +78,13 @@ public class Project extends Application {
                  
         //For LU button
         btnLU.setFocusTraversable(false);
-        btnLU.setOnAction(new EventHandler<ActionEvent>() {
-           
-            @Override
-            public void handle(ActionEvent event) {
-                
+        btnLU.setOnAction((ActionEvent event) -> {
+            try
+            {
                 // Read matrix from txt area
                 String[] rows = matrixTextArea.getText().split("\n");
-                ArrayList<Double> array = new ArrayList<Double>();
-                int i = 0;
+                ArrayList<Double> array = new ArrayList<>();
+                int i = 0; 
                 int j = 0;
                 for(String row : rows)
                 {
@@ -98,9 +93,9 @@ public class Project extends Application {
                     for(String col : cols)
                     {
                         array.add(Double.parseDouble(col));
-                        j++;
+                        j++;  
                     }
-                    i++;  
+                    i++;
                 }
                 // Final Matrix A
                 int nRow = i;
@@ -121,39 +116,54 @@ public class Project extends Application {
                 // Final vector b
                 Vector b = new Vector(vector_tmp);
                 
-                // -- Compute LU Pivot --
-                 
-                Vector x = new Vector(nCol);
-                Matrix L = new Matrix(nRow,nCol);
-                Matrix U = new Matrix(nRow,nCol);
-                Matrix P = new Matrix(nRow,nCol);
-                
-                LUpivot lu = new LUpivot(nRow, nCol);
-                lu.reorder(A, nRow, P, errorLabel);
-        
-                Matrix M = new Matrix();
-                M = M.multiplication(P, A); 
-        
-                lu.Lu_factorization(M, L, U, nRow, errorLabel);
-        
-                Vector PB = new Vector(nCol);
-                PB = PB.multiplication(P, b);
-                lu.Lu_solving(L, U, PB, nRow, x);
-                double det = lu.determinant(L, U, P);
+                if (k!=nCol || k==0 || nCol==0)
+                {
+                    if(k!=nCol)
+                        errorLabel.setText("The length of vector is not proper!");
+                    if(k==0)
+                        errorLabel.setText("The length of vector is zero!");
+                    if(nCol==0)
+                        errorLabel.setText("The length of matrix is zero!");
+                }
+                else
+                {
                     
-                //Finaly - display results in Text Area
-                BasicActions ba = new BasicActions();
-                ba.DisplayLUResults(matrixTextArea, vectorTextArea, resultTextArea, A, b, L, U, x, det);
+                    // -- Compute LU Pivot --
+                    
+                    Vector x = new Vector(nCol);
+                    Matrix L = new Matrix(nRow,nCol);
+                    Matrix U = new Matrix(nRow,nCol);
+                    Matrix P = new Matrix(nRow,nCol);
+                    
+                    LUpivot lu = new LUpivot(nRow, nCol);
+                    lu.reorder(A, nRow, P, errorLabel);
+                    
+                    Matrix M = new Matrix();
+                    M = M.multiplication(P, A);
+                    
+                    lu.Lu_factorization(M, L, U, nRow, errorLabel);
+                    
+                    Vector PB = new Vector(nCol);
+                    PB = PB.multiplication(P, b);
+                    lu.Lu_solving(L, U, PB, nRow, x);
+                    double det = lu.determinant(L, U, P);
+                    
+                    //Finaly - display results in Text Area
+                    BasicActions ba = new BasicActions();
+                    ba.DisplayLUResults(matrixTextArea, vectorTextArea, resultTextArea, A, b, L, U, x, det);
+                }
+            }
+            catch(Exception e)
+            {
+                errorLabel.setText(e.toString());
             }
         });
        
         
         //For inverse button
-        btnInverse.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                
+        btnInverse.setOnAction((ActionEvent event) -> {
+            try
+            {
                 // Read matrix from txt area
                 String[] rows = matrixTextArea.getText().split("\n");
                 ArrayList<Double> array = new ArrayList<Double>();
@@ -166,9 +176,9 @@ public class Project extends Application {
                     for(String col : cols)
                     {
                         array.add(Double.parseDouble(col));
-                        j++;
+                        j++;  
                     }
-                    i++;  
+                    i++;
                 }
                 // Final Matrix A
                 int nRow = i;
@@ -189,89 +199,109 @@ public class Project extends Application {
                 // Final vector b
                 Vector b = new Vector(vector_tmp);
                 
-                // -- Compute LU Pivot --
-                 
-                Vector x = new Vector(nCol);
-                Matrix L = new Matrix(nRow,nCol);
-                Matrix U = new Matrix(nRow,nCol);
-                Matrix P = new Matrix(nRow,nCol);
-                
-                LUpivot lu = new LUpivot(nRow, nCol);
-                lu.reorder(A, nRow, P, errorLabel);
+                if (k!=nCol || k==0 || nCol==0)
+                {
+                    if(k!=nCol)
+                        errorLabel.setText("The length of vector is not proper!");
+                    if(k==0)
+                        errorLabel.setText("The length of vector is zero!");
+                    if(nCol==0)
+                        errorLabel.setText("The length of matrix is zero!");
+                }
+                else
+                {
+                    // -- Compute LU Pivot --
+                    
+                    Vector x = new Vector(nCol);
+                    Matrix L = new Matrix(nRow,nCol);
+                    Matrix U = new Matrix(nRow,nCol);
+                    Matrix P = new Matrix(nRow,nCol);
+                    
+                    LUpivot lu = new LUpivot(nRow, nCol);
+                    lu.reorder(A, nRow, P, errorLabel);
+                    
+                    Matrix M = new Matrix();
+                    M = M.multiplication(P, A);
+                    
+                    lu.Lu_factorization(M, L, U, nRow, errorLabel);
+                    
+                    Vector PB = new Vector(nCol);
+                    PB = PB.multiplication(P, b);
+                    lu.Lu_solving(L, U, PB, nRow, x);
+                    double det = lu.determinant(L, U, P);
+                    
+                    //Inverse Matrix
+                    Inverse inv = new Inverse();
+                    Matrix I = new Matrix();
+                    I = inv.inverseMatrix(L, U, P, nRow);
+                    
+                    //Finaly - display results in Text Area
+                    BasicActions ba = new BasicActions();
+                    ba.DisplayInvResults(matrixTextArea, vectorTextArea, resultTextArea, A, L, U, I, det);
+                }
+            }
+            catch(Exception e)
+            {
+                errorLabel.setText(e.toString());
+            }
+        });
         
-                Matrix M = new Matrix();
-                M = M.multiplication(P, A); 
-        
-                lu.Lu_factorization(M, L, U, nRow, errorLabel);
-        
-                Vector PB = new Vector(nCol);
-                PB = PB.multiplication(P, b);
-                lu.Lu_solving(L, U, PB, nRow, x);
-                double det = lu.determinant(L, U, P);
-                
-                //Inverse Matrix
-                Inverse inv = new Inverse();
-                Matrix I = new Matrix();
-                I = inv.inverseMatrix(L, U, P, nRow);
-                
-                //Finaly - display results in Text Area
+        btnLoad.setOnAction((ActionEvent event) -> {
+            try
+            {
                 BasicActions ba = new BasicActions();
-                ba.DisplayInvResults(matrixTextArea, vectorTextArea, resultTextArea, A, L, U, I, det);
+                ba.FileRestrictions(fileChooser);
+                File file = fileChooser.showOpenDialog(primaryStage);
+                if (file != null) {
+                    ba.Load(file, resultTextArea, errorLabel);
+                }
+                else
+                {
+                    errorLabel.setText("File is empty!");
+                }
+                
+            }                
+            catch (Exception e)
+            {
+                errorLabel.setText(e.toString());
             }
         });
         
-        btnLoad.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                BasicActions ba = new BasicActions(); 
-                 ba.FileRestrictions(fileChooser);
-                 File file = fileChooser.showOpenDialog(primaryStage);
-                    if (file != null) {
-                        ba.Load(file, resultTextArea, errorLabel);
-                    }
-                    else
-                    {
-                        errorLabel.setText("File is empty!");
-                    }
-                
-            }
-        });
-        
-        btnSave.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Save results");
-                
+        btnSave.setOnAction((ActionEvent event) -> {
+            try {
+                FileChooser fileChooser1 = new FileChooser();
+                fileChooser1.setTitle("Save results");
                 //Set extension filter for text files
                 FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-                fileChooser.getExtensionFilters().add(extFilter);
-                
-                File file = fileChooser.showSaveDialog(primaryStage);
-                if (file != null) 
+                fileChooser1.getExtensionFilters().add(extFilter);
+                File file = fileChooser1.showSaveDialog(primaryStage);
+                if (file != null)
                 {
                     
                     BasicActions ba = new BasicActions();
                     ba.Save(resultTextArea, file, errorLabel);
                     
                 }
-                else
+                else 
                 {
                     errorLabel.setText("Result filed is empty!");
                 }
-                
+            }catch (Exception e)
+            {
+                errorLabel.setText(e.toString());
             }
         });
         
         //For clear button
-        btnClear.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
+        btnClear.setOnAction((ActionEvent event) -> {
+            try
+            {
                 BasicActions ba = new BasicActions();
-                ba.Clear(matrixTextArea,vectorTextArea,resultTextArea);
+                ba.Clear(matrixTextArea,vectorTextArea,resultTextArea,errorLabel);
+            }
+            catch (Exception e)
+            {
+                errorLabel.setText(e.toString());
             }
         });
         
@@ -331,6 +361,7 @@ public class Project extends Application {
     }
 
     /**
+     * Main using for launch the GUI.
      * @param args the command line arguments
      */
     public static void main(String[] args) 

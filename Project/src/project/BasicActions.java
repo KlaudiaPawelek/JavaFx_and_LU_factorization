@@ -13,27 +13,50 @@ import java.util.Scanner;
 import javafx.scene.control.Label;
 
 /**
- *
+ * Class extends Project class, it includes implementation of buttons 
+ * and text areas, which are visible in GUI like "LU pivot or "Save".
  * @author Klaudia Pawelek
  */
-public class BasicActions {
+public class BasicActions extends Project{
     
-    // Empty constructor
-    public BasicActions()
+    /**
+     * Empty constructor
+     */
+        public BasicActions()
     {
-        //TO DO
+        //empty
     }
     
-    // Clear all text areas, which are on main scene.
-    public void Clear(TextArea matrixTextArea, TextArea vectorTextArea, TextArea resultTextArea)
+
+    /**
+     * Clear all text areas and errorLable.
+     * @param matrixTextArea
+     * @param vectorTextArea
+     * @param resultTextArea
+     * @param errorLabel
+     */
+        public void Clear(TextArea matrixTextArea, TextArea vectorTextArea, TextArea resultTextArea, Label errorLabel)
     {
         matrixTextArea.clear();
         vectorTextArea.clear();
         resultTextArea.clear();
+        errorLabel.setText("");
     }
     
-    // Display results in Text Area, which is on main scene.
-    public void DisplayLUResults(TextArea matrixTextArea, TextArea vectorTextArea, TextArea resultTextArea, Matrix A, Vector b, Matrix L, Matrix U, Vector x, double det)
+
+    /**
+     * Display results of LU in Text Area, which is on main scene.
+     * @param matrixTextArea
+     * @param vectorTextArea
+     * @param resultTextArea
+     * @param A
+     * @param b
+     * @param L
+     * @param U
+     * @param x
+     * @param det
+     */
+        public void DisplayLUResults(TextArea matrixTextArea, TextArea vectorTextArea, TextArea resultTextArea, Matrix A, Vector b, Matrix L, Matrix U, Vector x, double det)
     {
         String message = "LU Decomposition with scaled partial pivoting \n \n";
         String originalMtx = "Original matrix \n";
@@ -57,12 +80,23 @@ public class BasicActions {
         String formatted = finalText
                             .replace(",", "")  //remove commas
                             .replace("[", "")  //remove right bracket
-                            .replace("]", "\n")  //remove left bracket
+                            .replace("]", "\n")//remove left bracket
                             .trim();           
         resultTextArea.setText(formatted);
     }
     
-     public void DisplayInvResults(TextArea matrixTextArea, TextArea vectorTextArea, TextArea resultTextArea, Matrix A, Matrix L, Matrix U, Matrix Inv, double det)
+    /**
+     * Display results of inversion in Text Area, which is on main scene.
+     * @param matrixTextArea
+     * @param vectorTextArea
+     * @param resultTextArea
+     * @param A
+     * @param L
+     * @param U
+     * @param Inv
+     * @param det
+     */
+    public void DisplayInvResults(TextArea matrixTextArea, TextArea vectorTextArea, TextArea resultTextArea, Matrix A, Matrix L, Matrix U, Matrix Inv, double det)
     {
         String message = "Matrix Inversion \n \n";
         String originalMtx = "Original matrix \n";
@@ -84,29 +118,46 @@ public class BasicActions {
         String formatted = finalText
                             .replace(",", "")  //remove commas
                             .replace("[", "")  //remove right bracket
-                            .replace("]", "\n")  //remove left bracket
+                            .replace("]", "\n")//remove left bracket
                             .trim();           
         resultTextArea.setText(formatted);
     }
     
-    // Allow the user to load a previously saved computation.
-    public void Load(File file, TextArea resultTextArea, Label errorLabel)
+
+    /**
+     * Allow the user to load a previously saved computation.
+     * @param file
+     * @param resultTextArea
+     * @param errorLabel
+     */
+        public void Load(File file, TextArea resultTextArea, Label errorLabel)
     {
-        try {
-        Scanner s = new Scanner(file).useDelimiter("\n");
-        resultTextArea.clear();
-        while (s.hasNext()) {
-            if (s.hasNextInt()) { // check if next token is an int
-                resultTextArea.appendText(s.nextInt() + " "); // display the found integer
-            } else {
-               resultTextArea.appendText(s.next() + " "); // else read the next token
+        try 
+        {
+            Scanner s = new Scanner(file).useDelimiter("\n");
+            resultTextArea.clear();
+            while (s.hasNext()) 
+            {
+                if (s.hasNextInt()) 
+                { 
+                    resultTextArea.appendText(s.nextInt() + " "); 
+                } 
+                else 
+                {
+                   resultTextArea.appendText(s.next() + " "); 
+                }
             }
+        } 
+        catch (FileNotFoundException ex) 
+        {
+            errorLabel.setText(ex.toString());
         }
-    } catch (FileNotFoundException ex) {
-        errorLabel.setText(ex.toString());
-    }
     }
     
+    /**
+     * File restricion for uploading, only txt files.
+     * @param fileChooser
+     */
     public void FileRestrictions(FileChooser fileChooser)
     {
         fileChooser.setTitle("Select previously saved computation");
@@ -114,20 +165,23 @@ public class BasicActions {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text", "*.txt"));
     }
     
-    // Save results from Result Text Area to text file.
-    public void Save(TextArea resultTextArea, File file, Label errorLabel)
+
+    /**
+     *  Save results from Result Text Area to text file.
+     * @param resultTextArea
+     * @param file
+     * @param errorLabel
+     */
+        public void Save(TextArea resultTextArea, File file, Label errorLabel)
     {        
-        try {
-            FileWriter fileWriter = new FileWriter(file);
-           // PrintWriter writer;
-            PrintStream writer;
-            //writer = new PrintWriter(fileWriter);
-            writer = new PrintStream(file);
-            
-            String finalText = resultTextArea.getText();
+        try 
+        {
+            PrintStream writer = new PrintStream(file,"UTF-8");
             writer.printf(String.format("%s", resultTextArea.getText()));
             writer.close();
-        } catch (IOException ex) {
+        } 
+        catch (IOException ex) 
+        {
             Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
             errorLabel.setText(ex.toString());
         }

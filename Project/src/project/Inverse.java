@@ -1,23 +1,38 @@
 package project;
 
 /**
- *
+ * Class extends Matrix class, It includes method responsible for 
+ * inverting of matrix.
  * @author Klaudia Pawelek
  */
 public class Inverse extends Matrix{
     
+    /**
+     * Empty constructor
+     */
     public Inverse()
     {
         //empty
     }
     
+    /**
+     * Constructor with size of matrix.
+     * @param m
+     * @param n
+     */
     public Inverse(int m, int n) 
-    {
-        
-        super(m, n);
-        
+    { 
+        super(m, n);   
     }
     
+    /**
+     * Inverse method, which uses L and U matrices.
+     * @param L
+     * @param U
+     * @param P
+     * @param n
+     * @return
+     */
     public Matrix inverseMatrix(Matrix L, Matrix U, Matrix P, int n)
     {
 	Matrix Uinv = new Matrix(n,n);
