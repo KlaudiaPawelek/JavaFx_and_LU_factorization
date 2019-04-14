@@ -21,10 +21,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
 import java.util.Scanner;
 import project.Matrix;
 import java.util.ArrayList;
 import java.lang.String;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -75,6 +78,10 @@ public class Project extends Application {
         btnLoad.setText("Load");
         btnLoad.setStyle("-fx-base: rgb("+(10*1)+","+(20*1)+","+(10*1)+");");
         
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load");
+        //fileChooser.showOpenDialog(primaryStage);
+        
         Button btnSave = new Button();
         btnSave.setText("Save");
         btnSave.setStyle("-fx-base: rgb("+(10*1)+","+(20*1)+","+(10*1)+");");
@@ -102,10 +109,11 @@ public class Project extends Application {
                     }
                     i++;  
                 }
+                // Final Matrix A
                 int nRow = i;
                 int nCol = j;
-                Matrix m = new Matrix(nCol, nRow);
-                m = m.copy(array, nRow, nCol);
+                Matrix A = new Matrix(nCol, nRow);
+                A = A.copy(array, nRow, nCol);
                 
                 
                 // Read vector from txt area
@@ -117,8 +125,32 @@ public class Project extends Application {
                     vector_tmp[k] = Double.parseDouble(vec);
                     k++;
                 }
+                // Final vector b
                 Vector b = new Vector(vector_tmp);
                 
+                // -- Compute LU Pivot --
+                 
+                Vector x = new Vector(nCol);
+                Matrix L = new Matrix(nRow,nCol);
+                Matrix U = new Matrix(nRow,nCol);
+                Matrix P = new Matrix(nRow,nCol);
+                
+                LUpivot lu = new LUpivot(nRow, nCol);
+                lu.reorder(A, nRow, P);
+        
+                Matrix M = new Matrix();
+                M = M.multiplication(P, A); 
+        
+                lu.Lu_factorization(M, L, U, nRow);
+        
+                Vector PB = new Vector(nCol);
+                PB = PB.multiplication(P, b);
+                lu.Lu_solving(L, U, PB, nRow, x);
+                double det = lu.determinant(L, U, P);
+                    
+                //Finaly - display results in Text Area
+                BasicActions ba = new BasicActions();
+                ba.DisplayLUResults(matrixTextArea, vectorTextArea, resultTextArea, A, b, L, U, x, det);
             }
         });
        
@@ -128,8 +160,70 @@ public class Project extends Application {
             
             @Override
             public void handle(ActionEvent event) {
-                Inverse inverse = new Inverse();
                 
+                // Read matrix from txt area
+                String[] rows = matrixTextArea.getText().split("\n");
+                ArrayList<Double> array = new ArrayList<Double>();
+                int i = 0;
+                int j = 0;
+                for(String row : rows)
+                {
+                    j = 0;
+                    String[] cols = row.split("\\s+");
+                    for(String col : cols)
+                    {
+                        array.add(Double.parseDouble(col));
+                        j++;
+                    }
+                    i++;  
+                }
+                // Final Matrix A
+                int nRow = i;
+                int nCol = j;
+                Matrix A = new Matrix(nCol, nRow);
+                A = A.copy(array, nRow, nCol);
+                
+                
+                // Read vector from txt area
+                String[] vector = vectorTextArea.getText().split("\\s+");
+                double[] vector_tmp = new double[nCol];
+                int  k = 0;
+                for(String vec : vector)
+                {
+                    vector_tmp[k] = Double.parseDouble(vec);
+                    k++;
+                }
+                // Final vector b
+                Vector b = new Vector(vector_tmp);
+                
+                // -- Compute LU Pivot --
+                 
+                Vector x = new Vector(nCol);
+                Matrix L = new Matrix(nRow,nCol);
+                Matrix U = new Matrix(nRow,nCol);
+                Matrix P = new Matrix(nRow,nCol);
+                
+                LUpivot lu = new LUpivot(nRow, nCol);
+                lu.reorder(A, nRow, P);
+        
+                Matrix M = new Matrix();
+                M = M.multiplication(P, A); 
+        
+                lu.Lu_factorization(M, L, U, nRow);
+        
+                Vector PB = new Vector(nCol);
+                PB = PB.multiplication(P, b);
+                lu.Lu_solving(L, U, PB, nRow, x);
+                double det = lu.determinant(L, U, P);
+                
+                //Inverse Matrix
+                Inverse inv = new Inverse();
+                Matrix I = new Matrix();
+                I = inv.inverseMatrix(L, U, P, nRow);
+                
+                //Finaly - display results in Text Area
+                BasicActions ba = new BasicActions();
+                ba.DisplayInvResults(matrixTextArea, vectorTextArea, resultTextArea, A, L, U, I, det);
             }
         });
         
@@ -137,7 +231,12 @@ public class Project extends Application {
             
             @Override
             public void handle(ActionEvent event) {
-                
+                BasicActions ba = new BasicActions(); 
+                 ba.FileRestrictions(fileChooser);
+                 File file = fileChooser.showOpenDialog(primaryStage);
+                    if (file != null) {
+                        ba.Load(file, resultTextArea);
+                    }
                 
             }
         });
@@ -146,9 +245,21 @@ public class Project extends Application {
             
             @Override
             public void handle(ActionEvent event) {
-                String results = new String();
-                BasicActions bs = new BasicActions();
-                bs.Save();
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Save results");
+                
+                //Set extension filter for text files
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+                fileChooser.getExtensionFilters().add(extFilter);
+                
+                File file = fileChooser.showSaveDialog(primaryStage);
+                if (file != null) 
+                {
+                    
+                    BasicActions ba = new BasicActions();
+                    ba.Save(resultTextArea, file);
+                    
+                }
                 
             }
         });
