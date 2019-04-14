@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Scanner;
+import javafx.scene.control.Label;
 
 /**
  *
@@ -100,7 +101,7 @@ public class BasicActions {
     }
     
     // Allow the user to load a previously saved computation.
-    public void Load(File file, TextArea resultTextArea)
+    public void Load(File file, TextArea resultTextArea, Label errorLabel)
     {
         try {
         Scanner s = new Scanner(file).useDelimiter("\n");
@@ -113,7 +114,7 @@ public class BasicActions {
             }
         }
     } catch (FileNotFoundException ex) {
-        System.err.println(ex);
+        errorLabel.setText(ex.toString());
     }
     }
     
@@ -125,7 +126,7 @@ public class BasicActions {
     }
     
     // Save results from Result Text Area to text file.
-    public void Save(TextArea resultTextArea, File file)
+    public void Save(TextArea resultTextArea, File file, Label errorLabel)
     {        
         try {
             FileWriter fileWriter = new FileWriter(file);
@@ -139,6 +140,7 @@ public class BasicActions {
             writer.close();
         } catch (IOException ex) {
             Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+            errorLabel.setText(ex.toString());
         }
 
    

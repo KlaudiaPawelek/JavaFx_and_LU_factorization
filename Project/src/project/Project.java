@@ -62,6 +62,9 @@ public class Project extends Application {
         resultTextArea.setScrollTop(xscrollValue);
         resultTextArea.setScrollLeft(yscrollValue);
         
+        Label errorLabel = new Label(" ");
+        errorLabel.setPadding(new Insets(0, xscrollValue, 5, 5));
+        
         Button btnLU = new Button();
         btnLU.setText("LU pivot");
         btnLU.setStyle("-fx-base: rgb("+(10*1)+","+(20*1)+","+(10*1)+");");
@@ -136,12 +139,12 @@ public class Project extends Application {
                 Matrix P = new Matrix(nRow,nCol);
                 
                 LUpivot lu = new LUpivot(nRow, nCol);
-                lu.reorder(A, nRow, P);
+                lu.reorder(A, nRow, P, errorLabel);
         
                 Matrix M = new Matrix();
                 M = M.multiplication(P, A); 
         
-                lu.Lu_factorization(M, L, U, nRow);
+                lu.Lu_factorization(M, L, U, nRow, errorLabel);
         
                 Vector PB = new Vector(nCol);
                 PB = PB.multiplication(P, b);
@@ -204,12 +207,12 @@ public class Project extends Application {
                 Matrix P = new Matrix(nRow,nCol);
                 
                 LUpivot lu = new LUpivot(nRow, nCol);
-                lu.reorder(A, nRow, P);
+                lu.reorder(A, nRow, P, errorLabel);
         
                 Matrix M = new Matrix();
                 M = M.multiplication(P, A); 
         
-                lu.Lu_factorization(M, L, U, nRow);
+                lu.Lu_factorization(M, L, U, nRow, errorLabel);
         
                 Vector PB = new Vector(nCol);
                 PB = PB.multiplication(P, b);
@@ -235,7 +238,7 @@ public class Project extends Application {
                  ba.FileRestrictions(fileChooser);
                  File file = fileChooser.showOpenDialog(primaryStage);
                     if (file != null) {
-                        ba.Load(file, resultTextArea);
+                        ba.Load(file, resultTextArea, errorLabel);
                     }
                 
             }
@@ -257,7 +260,7 @@ public class Project extends Application {
                 {
                     
                     BasicActions ba = new BasicActions();
-                    ba.Save(resultTextArea, file);
+                    ba.Save(resultTextArea, file, errorLabel);
                     
                 }
                 
@@ -287,8 +290,6 @@ public class Project extends Application {
         
         Label matrixLabel = new Label("A = ");
         Label vectorLabel = new Label ("b = ");
-        Label errorLabel = new Label(" ");
-        errorLabel.setPadding(new Insets(0, xscrollValue, 5, 5));
         
         HBox matrixHBox = new HBox();
         matrixHBox.setAlignment(Pos.CENTER);

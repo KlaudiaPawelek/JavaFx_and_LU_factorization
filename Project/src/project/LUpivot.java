@@ -6,6 +6,7 @@
 package project;
 import project.Matrix;
 import java.lang.Math;
+import javafx.scene.control.Label;
 /**
  *
  * @author s297163
@@ -17,7 +18,7 @@ public class LUpivot extends Matrix {
         super(m, n);
     }
     
-    public void Lu_factorization(Matrix A, Matrix L, Matrix U, int n)
+    public void Lu_factorization(Matrix A, Matrix L, Matrix U, int n, Label errorLabel)
     {
           double multiplication = 0.0;
           Matrix temp = new Matrix(A);
@@ -26,7 +27,7 @@ public class LUpivot extends Matrix {
 	for (int k = 0; k < n - 1; k++) {
 		for (int i = k + 1; i < n; i++) {
 			if (Math.abs(temp.matrix[k][k]) < 1.e-07) 
-                            System.err.println("Zero pivot found!");
+                            errorLabel.setText("Zero pivot found!");
                         multiplication = temp.matrix[i][k]/temp.matrix[k][k];
 			temp.matrix[i][k] = multiplication;                      // entries of L are saved in temp
 			for (int j = k + 1; j < n; j++) { 
@@ -75,7 +76,7 @@ public class LUpivot extends Matrix {
             x.vector[i] = temp.vector[i];
     }
     
-    public void reorder(Matrix A, int n, Matrix P)
+    public void reorder(Matrix A, int n, Matrix P, Label errorLabel)
     {
         // Note: pivoting information is stored in temperary vector pvt
 	int pvtk,pvti;
@@ -110,7 +111,7 @@ public class LUpivot extends Matrix {
 			}
 		}
 		if (Math.abs(aet) < 1.e-07) 
-                    System.err.println("Zero pivot found!");
+                    errorLabel.setText("Zero pivot found!");
 		if (pc != k) {                      // swap pvt[k] and pvt[pc]
 			int ii = pvt.vectorInt[k];
 			pvt.vectorInt[k] = pvt.vectorInt[pc];
