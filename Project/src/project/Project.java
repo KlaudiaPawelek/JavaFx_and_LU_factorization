@@ -19,10 +19,10 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
-
+import java.util.Scanner;
+import project.Matrix;
 
 /**
  *
@@ -42,10 +42,14 @@ public class Project extends Application {
     int yBarWidth = 15;
     int yBarHeight = 393;
     
+    
     @Override
     public void start(Stage primaryStage) {
         
     
+        TextField matrixTextField = new TextField();
+        TextField vectorTextField = new TextField();
+        
         Button btnLU = new Button();
         btnLU.setText("LU pivot");
         btnLU.setStyle("-fx-base: rgb("+(10*1)+","+(20*1)+","+(10*1)+");");
@@ -67,13 +71,13 @@ public class Project extends Application {
         btnSave.setStyle("-fx-base: rgb("+(10*1)+","+(20*1)+","+(10*1)+");");
         
         btnLU.setOnAction(new EventHandler<ActionEvent>() {
-            
+           
             @Override
             public void handle(ActionEvent event) {
-                LUpivot lu = new LUpivot();
-                lu.LUpivotFunction();
+                //todo
             }
         });
+        //btnLU.setOnAction(e->getMatrix());
         
         //For inverse button
         btnInverse.setOnAction(new EventHandler<ActionEvent>() {
@@ -114,8 +118,6 @@ public class Project extends Application {
         HBox matrixHBox = new HBox();
         matrixHBox.setAlignment(Pos.CENTER);
         matrixHBox.setSpacing(30);
-        TextField matrixTextField = new TextField();
-        TextField vectorTextField = new TextField();
         matrixTextField.setPadding(new Insets(10, 0, 0, 20));
         matrixTextField.setPrefWidth(350);
         matrixTextField.setPrefHeight(500);
@@ -157,7 +159,44 @@ public class Project extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Input the size of the system");
+        int size = in.nextInt();
+        
+        Matrix A = new Matrix(size,size);
+        Vector x = new Vector(size);
+        Vector b = new Vector(size);
+        
+        Matrix L = new Matrix(size,size);
+        Matrix U = new Matrix(size,size);
+        Matrix P = new Matrix(size,size);
+        
+        System.out.println("Input matrix: ");
+        for(int i = 0; i<size; i++)
+            for(int j = 0; j<size;j++)
+                A.matrix[i][j] = in.nextDouble();
+        
+        System.out.println("Input vector: ");
+        for(int i = 0; i<size; i++)
+            b.vector[i] = in.nextDouble();
+        
+        LUpivot lu = new LUpivot(size, size);
+        lu.reorder(A, size, P);
+        
+        Matrix M = new Matrix();
+        M = M.multiplication(P, A); 
+        
+        lu.Lu_factorization(M, L, U, size);
+        
+        Vector PB = new Vector(size);
+        PB = PB.multiplication(P, b);
+        lu.Lu_solving(L, U, PB, size, x);
+        double det = lu.determinant(L, U, P);
+        
+        Matrix I = lu.inverse(L, U, P, size);
+        
         launch(args);
     }
     
