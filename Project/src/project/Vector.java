@@ -2,7 +2,7 @@ package project;
 
 /**
  *
- * @author Klaudia
+ * @author Klaudia Pawelek
  */
 public class Vector {
 

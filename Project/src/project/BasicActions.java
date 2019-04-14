@@ -1,23 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package project;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type;
 import javafx.scene.control.TextArea;
-import java.lang.String;
 import java.util.Arrays;
-import java.io.BufferedWriter;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.awt.Desktop;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import javafx.stage.FileChooser;
-import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -25,7 +14,7 @@ import javafx.scene.control.Label;
 
 /**
  *
- * @author s297163
+ * @author Klaudia Pawelek
  */
 public class BasicActions {
     

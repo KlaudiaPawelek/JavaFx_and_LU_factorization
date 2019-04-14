@@ -1,15 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package project;
-import project.Matrix;
-import java.lang.Math;
 import javafx.scene.control.Label;
 /**
  *
- * @author s297163
+ * @author Klaudia Pawelek
  */
 public class LUpivot extends Matrix {
 

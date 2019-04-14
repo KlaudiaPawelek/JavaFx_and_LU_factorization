@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package project;
 
 import javafx.application.Application;
@@ -22,16 +17,12 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
-import java.util.Scanner;
-import project.Matrix;
 import java.util.ArrayList;
-import java.lang.String;
 import java.io.File;
-import java.io.IOException;
 
 /**
  *
- * @author s297163
+ * @author Klaudia Pawelek
  */
 public class Project extends Application {
     
@@ -83,7 +74,6 @@ public class Project extends Application {
         
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load");
-        //fileChooser.showOpenDialog(primaryStage);
         
         Button btnSave = new Button();
         btnSave.setText("Save");
@@ -240,6 +230,10 @@ public class Project extends Application {
                     if (file != null) {
                         ba.Load(file, resultTextArea, errorLabel);
                     }
+                    else
+                    {
+                        errorLabel.setText("File is empty!");
+                    }
                 
             }
         });
@@ -262,6 +256,10 @@ public class Project extends Application {
                     BasicActions ba = new BasicActions();
                     ba.Save(resultTextArea, file, errorLabel);
                     
+                }
+                else
+                {
+                    errorLabel.setText("Result filed is empty!");
                 }
                 
             }
@@ -338,6 +336,7 @@ public class Project extends Application {
     public static void main(String[] args) 
     {
         // Code for testing without GUI ;-)
+        
         /*Scanner in = new Scanner(System.in);
         System.out.println("Input the size of the system");
         int size = in.nextInt();
@@ -377,7 +376,7 @@ public class Project extends Application {
         Matrix I = new Matrix();
         I = i.inverseMatrix(L, U, P, size);*/
         
-        
+        // GUI
         launch(args);
     }
 }
