@@ -1,4 +1,5 @@
 package project;
+import java.util.ArrayList;
 
 /**
  *
@@ -73,6 +74,20 @@ public class Matrix {
        }
        
        return this.matrix;
+   }
+   
+   public Matrix copy(ArrayList<Double> arrayList, int m, int n)
+   {
+       Matrix result = new Matrix(m, n);
+       for(int i = 0; i < m; i++)
+       {
+           for(int j = 0; j < n; j++)
+           {
+               result.matrix[i][j] = arrayList.get(i*m+j);
+           }
+       }
+       
+       return result;
    }
    
    public Matrix multiplication(Matrix A, Matrix B)

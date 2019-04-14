@@ -14,7 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.scene.control.ToolBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -23,6 +23,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import java.util.Scanner;
 import project.Matrix;
+import java.util.ArrayList;
+import java.lang.String;
 
 /**
  *
@@ -35,8 +37,8 @@ public class Project extends Application {
     //https://o7planning.org/en/10857/javafx-scrollpane-tutorial
     ScrollBar xscrollBar;
     ScrollBar yscrollBar;
-    double xscrollValue=0;
-    double yscrollValue=15;
+    double xscrollValue=100;
+    double yscrollValue=50;
     int xBarWidth = 393;
     int xBarHeight = 15;
     int yBarWidth = 15;
@@ -47,8 +49,15 @@ public class Project extends Application {
     public void start(Stage primaryStage) {
         
     
-        TextField matrixTextField = new TextField();
-        TextField vectorTextField = new TextField();
+        TextArea matrixTextArea = new TextArea();
+        TextArea vectorTextArea = new TextArea();
+        TextArea resultTextArea = new TextArea("Result shall be visible here!");
+        matrixTextArea.setScrollTop(xscrollValue);
+        matrixTextArea.setScrollLeft(yscrollValue);
+        vectorTextArea.setScrollTop(xscrollValue);
+        vectorTextArea.setScrollLeft(yscrollValue);
+        resultTextArea.setScrollTop(xscrollValue);
+        resultTextArea.setScrollLeft(yscrollValue);
         
         Button btnLU = new Button();
         btnLU.setText("LU pivot");
@@ -69,15 +78,37 @@ public class Project extends Application {
         Button btnSave = new Button();
         btnSave.setText("Save");
         btnSave.setStyle("-fx-base: rgb("+(10*1)+","+(20*1)+","+(10*1)+");");
-        
+                 
+        //For LU button
+        btnLU.setFocusTraversable(false);
         btnLU.setOnAction(new EventHandler<ActionEvent>() {
            
             @Override
             public void handle(ActionEvent event) {
-                //todo
+                
+                // Read matrix and vector from txt filed
+                String[] rows = matrixTextArea.getText().split("\n");
+                ArrayList<Double> array = new ArrayList<Double>();
+                int i = 0;
+                int j = 0;
+                for(String row : rows)
+                {
+                    j = 0;
+                    String[] cols = row.split("\\s+");
+                    for(String col : cols)
+                    {
+                        array.add(Double.parseDouble(col));
+                        j++;
+                    }
+                    i++;  
+                }
+                int nRow = i;
+                int nCol = j;
+                Matrix m = new Matrix(nCol, nRow);
+                m = m.copy(array, nRow, nCol);
             }
         });
-        //btnLU.setOnAction(e->getMatrix());
+       
         
         //For inverse button
         btnInverse.setOnAction(new EventHandler<ActionEvent>() {
@@ -85,7 +116,27 @@ public class Project extends Application {
             @Override
             public void handle(ActionEvent event) {
                 Inverse inverse = new Inverse();
-                inverse.InverseFunction();
+                
+            }
+        });
+        
+        btnLoad.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                
+                
+            }
+        });
+        
+        btnSave.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                String results = new String();
+                BasicActions bs = new BasicActions();
+                bs.Save();
+                
             }
         });
         
@@ -94,8 +145,9 @@ public class Project extends Application {
             
             @Override
             public void handle(ActionEvent event) {
-                BasicActions basic = new BasicActions();
-                basic.Clear();
+                matrixTextArea.clear();
+                vectorTextArea.clear();
+                resultTextArea.clear();
             }
         });
         
@@ -118,17 +170,17 @@ public class Project extends Application {
         HBox matrixHBox = new HBox();
         matrixHBox.setAlignment(Pos.CENTER);
         matrixHBox.setSpacing(30);
-        matrixTextField.setPadding(new Insets(10, 0, 0, 20));
-        matrixTextField.setPrefWidth(350);
-        matrixTextField.setPrefHeight(500);
-        vectorTextField.setPadding(new Insets(10, 0, 0, 0)); //t r b l
-        vectorTextField.setPrefWidth(300);
-        vectorTextField.setPrefHeight(500);
+        matrixTextArea.setPadding(new Insets(10, 0, 0, 20));
+        matrixTextArea.setPrefWidth(350);
+        matrixTextArea.setPrefHeight(500);
+        vectorTextArea.setPadding(new Insets(10, 0, 0, 0)); //t r b l
+        vectorTextArea.setPrefWidth(300);
+        vectorTextArea.setPrefHeight(500);
         
         matrixHBox.getChildren().add(matrixLabel);
-        matrixHBox.getChildren().add(matrixTextField);
+        matrixHBox.getChildren().add(matrixTextArea);
         matrixHBox.getChildren().add(vectorLabel);
-        matrixHBox.getChildren().add(vectorTextField);
+        matrixHBox.getChildren().add(vectorTextArea);
         
         root.getChildren().add(matrixHBox);
         
@@ -140,10 +192,10 @@ public class Project extends Application {
         resultHBox.setPrefWidth(800);
         resultHBox.setPadding(new Insets(20, 0, 20, 0));
         
-        TextField textField = new TextField("Result shall be visible here!");
-        textField.setPrefHeight(300);
-        textField.setPrefWidth(800);
-        resultHBox.getChildren().add(textField);
+  
+        resultTextArea.setPrefHeight(300);
+        resultTextArea.setPrefWidth(800);
+        resultHBox.getChildren().add(resultTextArea);
         root.getChildren().add(resultHBox);
         root.getChildren().add(errorLabel);
 
@@ -161,7 +213,8 @@ public class Project extends Application {
      */
     public static void main(String[] args) 
     {
-        Scanner in = new Scanner(System.in);
+        // Code for testing without GUI ;-)
+        /*Scanner in = new Scanner(System.in);
         System.out.println("Input the size of the system");
         int size = in.nextInt();
         
@@ -195,9 +248,12 @@ public class Project extends Application {
         lu.Lu_solving(L, U, PB, size, x);
         double det = lu.determinant(L, U, P);
         
-        Matrix I = lu.inverse(L, U, P, size);
+        //Inverse Matrix
+        Inverse i = new Inverse();
+        Matrix I = new Matrix();
+        I = i.inverseMatrix(L, U, P, size);*/
+        
         
         launch(args);
     }
-    
 }
