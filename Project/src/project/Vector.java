@@ -30,6 +30,18 @@ public class Vector {
         this.vectorInt = new int[size];
     }
     
+    public Vector(double[] array)
+    {
+        this.size = array.length;
+        this.vector = new double[size];
+        for(int i = 0; i<size; i++)
+        {
+            this.vector[i] = array[i];
+        }
+        
+        this.vectorInt = new int[size]; 
+    }
+    
     public int getSize()
     {
         return this.size;

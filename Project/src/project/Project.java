@@ -86,7 +86,7 @@ public class Project extends Application {
             @Override
             public void handle(ActionEvent event) {
                 
-                // Read matrix and vector from txt filed
+                // Read matrix from txt area
                 String[] rows = matrixTextArea.getText().split("\n");
                 ArrayList<Double> array = new ArrayList<Double>();
                 int i = 0;
@@ -106,6 +106,19 @@ public class Project extends Application {
                 int nCol = j;
                 Matrix m = new Matrix(nCol, nRow);
                 m = m.copy(array, nRow, nCol);
+                
+                
+                // Read vector from txt area
+                String[] vector = vectorTextArea.getText().split("\\s+");
+                double[] vector_tmp = new double[nCol];
+                int  k = 0;
+                for(String vec : vector)
+                {
+                    vector_tmp[k] = Double.parseDouble(vec);
+                    k++;
+                }
+                Vector b = new Vector(vector_tmp);
+                
             }
         });
        
