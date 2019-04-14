@@ -158,9 +158,8 @@ public class Project extends Application {
             
             @Override
             public void handle(ActionEvent event) {
-                matrixTextArea.clear();
-                vectorTextArea.clear();
-                resultTextArea.clear();
+                BasicActions ba = new BasicActions();
+                ba.Clear(matrixTextArea,vectorTextArea,resultTextArea);
             }
         });
         

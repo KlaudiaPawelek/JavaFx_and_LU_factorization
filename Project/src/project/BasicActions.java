@@ -5,6 +5,8 @@
  */
 package project;
 
+import javafx.scene.control.TextArea;
+
 /**
  *
  * @author s297163
@@ -16,10 +18,11 @@ public class BasicActions {
         //TO DO
     }
     
-    public void Clear()
+    public void Clear(TextArea matrixTextArea, TextArea vectorTextArea, TextArea resultTextArea)
     {
-        //TO DO
-        System.out.println("Clear");
+        matrixTextArea.clear();
+        vectorTextArea.clear();
+        resultTextArea.clear();
     }
     
     public void Load()
